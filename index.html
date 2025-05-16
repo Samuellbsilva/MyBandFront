@@ -202,6 +202,9 @@ function renderSetlist(filtro = '') {
     btnDelete.textContent = 'Excluir';
     btnDelete.className = 'delete';
     btnDelete.onclick = () => removerMusica(item.id);
+    btnDelete.style.color = 'red';
+    btnEdit.style.color = 'blue';
+    btnEdit.style.marginRight = '10px';
     actionsDiv.appendChild(btnEdit);
     actionsDiv.appendChild(btnDelete);
     div.appendChild(infoDiv);
