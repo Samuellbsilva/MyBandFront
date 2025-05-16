@@ -98,8 +98,10 @@
     <input type="text" id="musica-link" placeholder="Link da Música (opcional)" />
     <button id="btn-add-update-music">Adicionar Música</button>
 
-    <div id="setlist-error" class="error"></div>
+    <!-- Filtro de pesquisa -->
+    <input type="text" id="filtro-pesquisa" placeholder="🔍 Pesquisar música..." />
 
+    <div id="setlist-error" class="error"></div>
     <div id="setlist-list"></div>
 
     <button class="gray" id="btn-logout">Sair</button>
@@ -124,6 +126,8 @@ const setlistList = document.getElementById('setlist-list');
 const setlistTitle = document.getElementById('setlist-title');
 const setlistError = document.getElementById('setlist-error');
 const btnLogout = document.getElementById('btn-logout');
+const filtroPesquisa = document.getElementById('filtro-pesquisa');
+
 document.getElementById('btn-go-register').onclick = () => { showScreen('register'); clearErrors(); };
 document.getElementById('btn-go-login').onclick = () => { showScreen('login'); clearErrors(); };
 document.getElementById('btn-login').onclick = handleLogin;
@@ -154,6 +158,7 @@ function clearErrors() {
   setlistError.textContent = '';
 }
 function alertMessage(msg) { alert(msg); }
+
 async function handleLogin() {
   clearErrors();
   if(!loginNome.value.trim() || !loginSenha.value.trim()) {
@@ -180,6 +185,7 @@ async function handleLogin() {
     loginError.textContent = 'Falha ao conectar com o servidor.';
   }
 }
+
 async function handleRegister() {
   clearErrors();
   if(!registerNome.value.trim() || !registerSenha.value.trim()) {
@@ -199,11 +205,13 @@ async function handleRegister() {
     registerError.textContent = 'Falha ao conectar com o servidor.';
   }
 }
+
 async function showSetlist() {
   showScreen('setlist');
   setlistTitle.textContent = `Repertório da Banda: ${nomeBanda}`;
   await carregarSetlist();
 }
+
 async function carregarSetlist() {
   setlistError.textContent = '';
   try {
@@ -215,9 +223,13 @@ async function carregarSetlist() {
     setlistError.textContent = 'Não foi possível carregar a setlist.';
   }
 }
-function renderSetlist() {
+
+function renderSetlist(filtro = '') {
   setlistList.innerHTML = '';
-  setlist.forEach(item => {
+  const filtroLower = filtro.toLowerCase();
+  const filtrado = setlist.filter(item => item.nome_musica.toLowerCase().includes(filtroLower));
+
+  filtrado.forEach(item => {
     const div = document.createElement('div');
     div.className = 'setlist-item';
     const infoDiv = document.createElement('div');
@@ -255,6 +267,7 @@ function renderSetlist() {
     setlistList.appendChild(div);
   });
 }
+
 async function adicionarOuAtualizarMusica() {
   setlistError.textContent = '';
   const nome = musicaNome.value.trim();
@@ -288,26 +301,32 @@ async function adicionarOuAtualizarMusica() {
     setlistError.textContent = editandoId ? 'Erro ao atualizar música.' : 'Erro ao adicionar música.';
   }
 }
+
 async function removerMusica(id) {
   try {
     await fetch(`${apiBase}/setlist/${id}`, { method: 'DELETE' });
     setlist = setlist.filter(m => m.id !== id);
-    renderSetlist();
+    renderSetlist(filtroPesquisa.value);
   } catch {
     setlistError.textContent = 'Erro ao excluir música.';
   }
 }
 
-(function init() {
+// Filtro em tempo real
+filtroPesquisa.addEventListener('input', () => {
+  renderSetlist(filtroPesquisa.value);
+});
+
+window.onload = () => {
   const token = localStorage.getItem('userToken');
   if(token) {
     bandaId = token;
-    nomeBanda = 'Banda';
+    nomeBanda = 'Sua Banda'; // Nome fictício, poderia ser salvo no localStorage também
     showSetlist();
   } else {
     showScreen('login');
   }
-})();
+};
 </script>
 </body>
 </html>
