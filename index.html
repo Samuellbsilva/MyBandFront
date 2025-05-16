@@ -1,114 +1,153 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>SamBand - Versão Web</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #fff;
-    margin: 0;
-    padding: 20px;
-  }
-  .container {
-    max-width: 400px;
-    margin: auto;
-  }
-  h1 {
-    text-align: center;
-  }
-  input {
-    width: 100%;
-    padding: 8px;
-    margin-top: 8px;
-    margin-bottom: 16px;
-    box-sizing: border-box;
-  }
-  button {
-    background-color: #3f73f1;
-    color: white;
-    border: none;
-    padding: 10px;
-    width: 100%;
-    margin-bottom: 10px;
-    cursor: pointer;
-  }
-  button.gray {
-    background-color: gray;
-  }
-  .link-button {
-    background: none;
-    border: none;
-    color: #3f73f1;
-    cursor: pointer;
-    text-decoration: underline;
-    padding: 0;
-    margin: 0 0 16px 0;
-  }
-  .setlist-item {
-    border-bottom: 1px solid #ddd;
-    padding: 10px 0;
-    display: flex;
-    justify-content: space-between;
-  }
-  .setlist-item div {
-    max-width: 70%;
-  }
-  .actions button {
-    background: none;
-    border: none;
-    color: #3f73f1;
-    margin-left: 10px;
-    cursor: pointer;
-  }
-  .actions button.delete {
-    color: red;
-  }
-  .error {
-    color: red;
-    margin-bottom: 16px;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SamBand - Versão Web</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<div class="container">
-  <div id="login-screen" style="display:none;">
-    <h1>🎶SamBand</h1>
-    <input type="text" id="login-nome" placeholder="Nome da Banda" />
-    <input type="password" id="login-senha" placeholder="Senha" />
-    <button id="btn-login">Entrar</button>
-    <button class="link-button" id="btn-go-register">Registrar Banda</button>
-    <div id="login-error" class="error"></div>
+<body class="bg-gray-100 text-gray-800 font-sans p-6">
+
+  <div class="max-w-md mx-auto bg-white p-6 rounded-xl shadow-md space-y-6">
+    
+    <!-- LOGIN -->
+    <div id="login-screen" class="space-y-4 hidden">
+      <h1 class="text-2xl font-bold text-center">🎶 SamBand</h1>
+      <input type="text" id="login-nome" placeholder="Nome da Banda" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <input type="password" id="login-senha" placeholder="Senha" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <button id="btn-login" class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">Entrar</button>
+      <button id="btn-go-register" class="text-blue-600 text-sm underline hover:text-blue-800">Registrar Banda</button>
+      <div id="login-error" class="text-red-600 text-sm"></div>
+    </div>
+
+    <!-- REGISTRO -->
+    <div id="register-screen" class="space-y-4 hidden">
+      <h1 class="text-2xl font-bold text-center">🎶 SamBand</h1>
+      <input type="text" id="register-nome" placeholder="Nome da Banda" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <input type="password" id="register-senha" placeholder="Senha" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <button id="btn-register" class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">Registrar Banda</button>
+      <button id="btn-go-login" class="text-blue-600 text-sm underline hover:text-blue-800">Já tem conta? Faça login</button>
+      <div id="register-error" class="text-red-600 text-sm"></div>
+    </div>
+
+    <!-- SETLIST -->
+    <div id="setlist-screen" class="space-y-4 hidden">
+      <h1 id="setlist-title" class="text-xl font-semibold text-center">Repertório da Banda</h1>
+
+      <input type="text" id="musica-nome" placeholder="Nome da Música" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <input type="text" id="musica-link" placeholder="Link da Música (opcional)" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <button id="btn-add-update-music" class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">Adicionar Música</button>
+
+      <input type="text" id="filtro-pesquisa" placeholder="🔍 Pesquisar música..." class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+      <div id="setlist-error" class="text-red-600 text-sm"></div>
+
+      <div id="setlist-list" class="divide-y divide-gray-200"></div>
+
+      <button id="btn-logout" class="w-full bg-gray-500 text-white py-2 rounded-md hover:bg-gray-600 transition">Sair</button>
+    </div>
   </div>
-
-  <div id="register-screen" style="display:none;">
-    <h1>🎶 SamBand</h1>
-    <input type="text" id="register-nome" placeholder="Nome da Banda" />
-    <input type="password" id="register-senha" placeholder="Senha" />
-    <button id="btn-register">Registrar Banda</button>
-    <button class="link-button" id="btn-go-login">Já tem conta? Faça login</button>
-    <div id="register-error" class="error"></div>
-  </div>
-
-  <div id="setlist-screen" style="display:none;">
-    <h1 id="setlist-title">Repertório da Banda</h1>
-
-    <input type="text" id="musica-nome" placeholder="Nome da Música" />
-    <input type="text" id="musica-link" placeholder="Link da Música (opcional)" />
-    <button id="btn-add-update-music">Adicionar Música</button>
-
-    <!-- Filtro de pesquisa -->
-    <input type="text" id="filtro-pesquisa" placeholder="🔍 Pesquisar música..." />
-
-    <div id="setlist-error" class="error"></div>
-    <div id="setlist-list"></div>
-
-    <button class="gray" id="btn-logout">Sair</button>
-  </div>
-</div>
 
 <script>
+
+function applyTailwindStyles() {
+  const container = document.getElementById('app');
+  container.className = "max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg";
+
+  // Inputs (todos)
+  const inputs = container.querySelectorAll('input[type="text"], input[type="password"]');
+  inputs.forEach(input => {
+    input.className = "w-full px-4 py-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500";
+  });
+
+  // Buttons principais (Entrar, Registrar, Adicionar, Atualizar)
+  const buttons = container.querySelectorAll('button:not(.link-button):not(.gray)');
+  buttons.forEach(btn => {
+    btn.className = "w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded mb-4 transition-colors duration-300";
+  });
+
+  // Botões "link" (trocar de tela)
+  const linkButtons = container.querySelectorAll('.link-button');
+  linkButtons.forEach(btn => {
+    btn.className = "text-blue-600 hover:text-blue-800 underline text-center block mb-6 cursor-pointer bg-transparent border-0 p-0";
+  });
+
+  // Botão cinza (logout)
+  const grayBtn = document.getElementById('btn-logout');
+  grayBtn.className = "w-full bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 rounded mt-6";
+
+  // Erros
+  const errors = container.querySelectorAll('.error');
+  errors.forEach(err => {
+    err.className = "text-red-600 mb-4 min-h-[1.25rem]";
+  });
+
+  // Setlist items container
+  const setlistList = document.getElementById('setlist-list');
+  setlistList.className = "divide-y divide-gray-200";
+
+  // Remover estilos inline e refazer renderSetlist para Tailwind
+  renderSetlist = (filtro = '') => {
+    setlistList.innerHTML = '';
+    const filtroLower = filtro.toLowerCase();
+    const filtrado = setlist.filter(item => item.nome_musica.toLowerCase().includes(filtroLower));
+
+    filtrado.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'flex justify-between items-center py-3';
+
+      const infoDiv = document.createElement('div');
+      infoDiv.className = "max-w-[70%]";
+
+      const nomeMusica = document.createElement('div');
+      nomeMusica.textContent = item.nome_musica;
+      nomeMusica.className = "font-medium text-gray-800";
+
+      infoDiv.appendChild(nomeMusica);
+
+      if(item.link) {
+        const linkMusica = document.createElement('div');
+        const a = document.createElement('a');
+        a.href = item.link;
+        a.target = '_blank';
+        a.textContent = item.link;
+        a.className = "text-blue-600 hover:underline text-sm truncate block max-w-full";
+        linkMusica.appendChild(a);
+        infoDiv.appendChild(linkMusica);
+      }
+
+      const actionsDiv = document.createElement('div');
+      actionsDiv.className = 'flex space-x-4';
+
+      const btnEdit = document.createElement('button');
+      btnEdit.textContent = 'Editar';
+      btnEdit.className = 'text-blue-600 hover:text-blue-800 font-semibold';
+      btnEdit.onclick = () => {
+        musicaNome.value = item.nome_musica;
+        musicaLink.value = item.link || '';
+        editandoId = item.id;
+        btnAddUpdate.textContent = 'Atualizar Música';
+      };
+
+      const btnDelete = document.createElement('button');
+      btnDelete.textContent = 'Excluir';
+      btnDelete.className = 'text-red-600 hover:text-red-800 font-semibold';
+      btnDelete.onclick = () => removerMusica(item.id);
+
+      actionsDiv.appendChild(btnEdit);
+      actionsDiv.appendChild(btnDelete);
+
+      div.appendChild(infoDiv);
+      div.appendChild(actionsDiv);
+
+      setlistList.appendChild(div);
+    });
+  };
+}
+
+applyTailwindStyles();
+
+
 const apiBase = 'https://myband.up.railway.app';
 const loginScreen = document.getElementById('login-screen');
 const registerScreen = document.getElementById('register-screen');
@@ -312,7 +351,7 @@ async function removerMusica(id) {
   }
 }
 
-// Filtro em tempo real
+
 filtroPesquisa.addEventListener('input', () => {
   renderSetlist(filtroPesquisa.value);
 });
@@ -321,7 +360,7 @@ window.onload = () => {
   const token = localStorage.getItem('userToken');
   if(token) {
     bandaId = token;
-    nomeBanda = 'Sua Banda'; // Nome fictício, poderia ser salvo no localStorage também
+    nomeBanda = 'Sua Banda';
     showSetlist();
   } else {
     showScreen('login');
