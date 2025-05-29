@@ -1,6 +1,6 @@
 # 🎶 SamBand - Versão Web
 
-**SamBand Web** é a interface de usuário para a [API de Setlist de Bandas](https://github.com/Samuellbsilva/MyBand), permitindo que músicos gerenciem seus repertórios de forma simples e intuitiva diretamente do navegador.
+**My Band Front** é a interface de usuário para a [API de Setlist de Bandas](https://github.com/Samuellbsilva/MyBand), permitindo que músicos gerenciem seus repertórios de forma simples e intuitiva diretamente do navegador.
 
 Com um design responsivo e amigável, a aplicação oferece funcionalidades essenciais para o controle do repertório musical, tudo totalmente integrado à API desenvolvida em Flask.
 
